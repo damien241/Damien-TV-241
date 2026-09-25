@@ -35,11 +35,11 @@ jobs:
 
       - name: app/build.gradle
         run: |
-          printf 'plugins {\n    id "com.android.application"\n    id "kotlin-android"\n}\nandroid {\n    namespace "com.damientv241.app"\n    compileSdk 34\n    defaultConfig {\n        applicationId "com.damientv241.app"\n        minSdk 21\n        targetSdk 34\n        versionCode 1\n        versionName "1.0"\n    }\n    buildTypes {\n        release {\n            minifyEnabled false\n            signingConfig signingConfigs.debug\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }\n    kotlinOptions { jvmTarget = "17" }\n}\ndependencies {\n    implementation "androidx.core:core-ktx:1.12.0"\n    implementation "androidx.appcompat:appcompat:1.6.1"\n    implementation "androidx.recyclerview:recyclerview:1.3.2"\n    implementation "androidx.media3:media3-exoplayer:1.2.1"\n    implementation "androidx.media3:media3-exoplayer-hls:1.2.1"\n    implementation "androidx.media3:media3-ui:1.2.1"\n    implementation "com.squareup.okhttp3:okhttp:4.12.0"\n    implementation "com.github.bumptech.glide:glide:4.16.0"\n    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"\n}\n' > app/build.gradle
+          printf 'plugins {\n    id "com.android.application"\n    id "kotlin-android"\n}\nandroid {\n    namespace "com.damientv241.app"\n    compileSdk 34\n    defaultConfig {\n        applicationId "com.damientv241.app"\n        minSdk 21\n        targetSdk 34\n        versionCode 2\n        versionName "1.1"\n    }\n    buildTypes {\n        release {\n            minifyEnabled false\n            signingConfig signingConfigs.debug\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }\n    kotlinOptions { jvmTarget = "17" }\n}\ndependencies {\n    implementation "androidx.core:core-ktx:1.12.0"\n    implementation "androidx.appcompat:appcompat:1.6.1"\n    implementation "androidx.recyclerview:recyclerview:1.3.2"\n    implementation "androidx.media3:media3-exoplayer:1.2.1"\n    implementation "androidx.media3:media3-exoplayer-hls:1.2.1"\n    implementation "androidx.media3:media3-exoplayer-dash:1.2.1"\n    implementation "androidx.media3:media3-ui:1.2.1"\n    implementation "com.squareup.okhttp3:okhttp:4.12.0"\n    implementation "com.github.bumptech.glide:glide:4.16.0"\n    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"\n}\n' > app/build.gradle
 
       - name: AndroidManifest
         run: |
-          printf '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n<uses-permission android:name="android.permission.INTERNET"/>\n<uses-permission android:name="android.permission.WAKE_LOCK"/>\n<application android:label="Damien TV 241" android:usesCleartextTraffic="true" android:theme="@style/Theme.AppCompat.NoActionBar">\n<activity android:name=".MainActivity" android:exported="true">\n<intent-filter>\n<action android:name="android.intent.action.MAIN"/>\n<category android:name="android.intent.category.LAUNCHER"/>\n</intent-filter>\n</activity>\n<activity android:name=".FilmsActivity" android:exported="false"/>\n<activity android:name=".SubActivity" android:exported="false"/>\n<activity android:name=".DirectActivity" android:exported="false"/>\n<activity android:name=".PlayerActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>\n</application>\n</manifest>\n' > app/src/main/AndroidManifest.xml
+          printf '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n<uses-permission android:name="android.permission.INTERNET"/>\n<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>\n<uses-permission android:name="android.permission.WAKE_LOCK"/>\n<application android:label="Damien TV 241" android:usesCleartextTraffic="true" android:theme="@style/Theme.AppCompat.NoActionBar">\n<activity android:name=".MainActivity" android:exported="true">\n<intent-filter>\n<action android:name="android.intent.action.MAIN"/>\n<category android:name="android.intent.category.LAUNCHER"/>\n</intent-filter>\n</activity>\n<activity android:name=".FilmsActivity" android:exported="false"/>\n<activity android:name=".SubActivity" android:exported="false"/>\n<activity android:name=".DirectActivity" android:exported="false"/>\n<activity android:name=".PlayerActivity" android:exported="false" android:configChanges="orientation|screenSize|keyboardHidden"/>\n</application>\n</manifest>\n' > app/src/main/AndroidManifest.xml
 
       - name: MainActivity.kt
         run: |
@@ -90,17 +90,10 @@ jobs:
 
               private fun flagView(): View {
                   val v = View(this)
-                  val g = GradientDrawable(
-                      GradientDrawable.Orientation.TOP_BOTTOM,
-                      intArrayOf(
-                          Color.parseColor("#009E60"),
-                          Color.parseColor("#009E60"),
-                          Color.parseColor("#FCD116"),
-                          Color.parseColor("#FCD116"),
-                          Color.parseColor("#3A75C4"),
-                          Color.parseColor("#3A75C4")
-                      ))
-                  v.background = g
+                  v.background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                      intArrayOf(Color.parseColor("#009E60"), Color.parseColor("#009E60"),
+                          Color.parseColor("#FCD116"), Color.parseColor("#FCD116"),
+                          Color.parseColor("#3A75C4"), Color.parseColor("#3A75C4")))
                   return v
               }
 
@@ -111,18 +104,14 @@ jobs:
                   }
                   val tvBody = FrameLayout(this)
                   val tvGradient = GradientDrawable()
-                  tvGradient.setColor(ACCENT)
-                  tvGradient.cornerRadius = 16f
+                  tvGradient.setColor(ACCENT); tvGradient.cornerRadius = 16f
                   tvBody.background = tvGradient
                   val screen = FrameLayout(this)
                   val screenBg = GradientDrawable()
-                  screenBg.setColor(Color.parseColor("#0B0F1A"))
-                  screenBg.cornerRadius = 8f
+                  screenBg.setColor(Color.parseColor("#0B0F1A")); screenBg.cornerRadius = 8f
                   screen.background = screenBg
                   val dText = TextView(this).apply {
-                      text = "D"
-                      setTextColor(TEXT)
-                      textSize = 40f
+                      text = "D"; setTextColor(TEXT); textSize = 40f
                       gravity = Gravity.CENTER
                       setTypeface(null, android.graphics.Typeface.BOLD)
                   }
@@ -132,15 +121,10 @@ jobs:
                   tvBody.addView(screen, screenLp)
                   container.addView(tvBody, LinearLayout.LayoutParams(150, 120))
                   val legRow = LinearLayout(this).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      gravity = Gravity.CENTER
-                  }
-                  val legLeft = View(this).apply { setBackgroundColor(ACCENT) }
-                  val legRight = View(this).apply { setBackgroundColor(ACCENT) }
-                  val gap = View(this)
-                  legRow.addView(legLeft, LinearLayout.LayoutParams(20, 12))
-                  legRow.addView(gap, LinearLayout.LayoutParams(80, 12))
-                  legRow.addView(legRight, LinearLayout.LayoutParams(20, 12))
+                      orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER }
+                  legRow.addView(View(this).apply { setBackgroundColor(ACCENT) }, LinearLayout.LayoutParams(20, 12))
+                  legRow.addView(View(this), LinearLayout.LayoutParams(80, 12))
+                  legRow.addView(View(this).apply { setBackgroundColor(ACCENT) }, LinearLayout.LayoutParams(20, 12))
                   container.addView(legRow)
                   return container
               }
@@ -151,110 +135,64 @@ jobs:
                   window.statusBarColor = BG
 
                   val root = LinearLayout(this).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setBackgroundColor(BG)
-                  }
+                      orientation = LinearLayout.VERTICAL; setBackgroundColor(BG) }
 
-                  // HEADER
                   val header = LinearLayout(this).apply {
                       orientation = LinearLayout.HORIZONTAL
-                      setPadding(30, 50, 30, 24)
-                      gravity = Gravity.CENTER_VERTICAL
-                  }
+                      setPadding(30, 50, 30, 24); gravity = Gravity.CENTER_VERTICAL }
                   header.addView(tvLogoView())
                   val titleCol = LinearLayout(this).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setPadding(28, 0, 0, 0)
-                  }
+                      orientation = LinearLayout.VERTICAL; setPadding(28, 0, 0, 0) }
                   val titleRow = LinearLayout(this).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      gravity = Gravity.CENTER_VERTICAL
-                  }
-                  val title = TextView(this).apply {
-                      text = "Damien TV 241"
-                      setTextColor(TEXT)
-                      textSize = 22f
-                      setTypeface(null, android.graphics.Typeface.BOLD)
-                  }
-                  titleRow.addView(title)
+                      orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+                  titleRow.addView(TextView(this).apply {
+                      text = "Damien TV 241"; setTextColor(TEXT); textSize = 22f
+                      setTypeface(null, android.graphics.Typeface.BOLD) })
                   titleRow.addView(View(this), LinearLayout.LayoutParams(16, 1))
                   titleRow.addView(flagView(), LinearLayout.LayoutParams(72, 46))
-                  val subtitle = TextView(this).apply {
-                      text = "PROTOTYPE NEYLA 241"
-                      setTextColor(GOLD)
-                      textSize = 12f
-                      setPadding(0, 6, 0, 0)
-                  }
                   titleCol.addView(titleRow)
-                  titleCol.addView(subtitle)
+                  titleCol.addView(TextView(this).apply {
+                      text = "PROTOTYPE NEYLA 241"; setTextColor(GOLD); textSize = 12f
+                      setPadding(0, 6, 0, 0) })
                   header.addView(titleCol)
                   root.addView(header)
 
-                  // PRESETS
                   val presetScroll = HorizontalScrollView(this)
                   val presetRow = LinearLayout(this).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      setPadding(24, 16, 24, 16)
-                  }
+                      orientation = LinearLayout.HORIZONTAL; setPadding(24, 16, 24, 16) }
                   presets.forEach { (name, url) ->
-                      val btn = TextView(this).apply {
-                          text = name
-                          setTextColor(TEXT)
-                          textSize = 16f
-                          setPadding(40, 26, 40, 26)
-                          setBackgroundColor(CARD)
+                      presetRow.addView(TextView(this).apply {
+                          text = name; setTextColor(TEXT); textSize = 16f
+                          setPadding(40, 26, 40, 26); setBackgroundColor(CARD)
                           setOnClickListener { loadPlaylist(url) }
-                      }
-                      val lp = LinearLayout.LayoutParams(
+                      }, LinearLayout.LayoutParams(
                           LinearLayout.LayoutParams.WRAP_CONTENT,
-                          LinearLayout.LayoutParams.WRAP_CONTENT)
-                      lp.marginEnd = 18
-                      presetRow.addView(btn, lp)
+                          LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginEnd = 18 })
                   }
                   presetScroll.addView(presetRow)
                   root.addView(presetScroll)
 
-                  // URL ROW
                   val urlRow = LinearLayout(this).apply {
                       orientation = LinearLayout.HORIZONTAL
-                      setPadding(24, 16, 24, 16)
-                      gravity = Gravity.CENTER_VERTICAL
-                  }
+                      setPadding(24, 16, 24, 16); gravity = Gravity.CENTER_VERTICAL }
                   val urlInput = EditText(this).apply {
-                      setText(presets[0].second)
-                      setTextColor(TEXT)
-                      setHintTextColor(MUTED)
-                      hint = "URL M3U"
-                      textSize = 16f
-                      setBackgroundColor(CARD)
-                      setPadding(28, 28, 28, 28)
-                  }
+                      setText(presets[0].second); setTextColor(TEXT); setHintTextColor(MUTED)
+                      hint = "URL M3U"; textSize = 16f; setBackgroundColor(CARD)
+                      setPadding(28, 28, 28, 28) }
                   val urlLp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
                   val loadBtn = TextView(this).apply {
-                      text = "Charger"
-                      setTextColor(TEXT)
-                      textSize = 16f
-                      setBackgroundColor(ACCENT)
-                      setPadding(40, 32, 40, 32)
-                      setOnClickListener { loadPlaylist(urlInput.text.toString()) }
-                  }
+                      text = "Charger"; setTextColor(TEXT); textSize = 16f
+                      setBackgroundColor(ACCENT); setPadding(40, 32, 40, 32)
+                      setOnClickListener { loadPlaylist(urlInput.text.toString()) } }
                   val btnLp = LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.WRAP_CONTENT,
-                      LinearLayout.LayoutParams.WRAP_CONTENT)
-                  btnLp.marginStart = 16
-                  urlRow.addView(urlInput, urlLp)
-                  urlRow.addView(loadBtn, btnLp)
+                      LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginStart = 16 }
+                  urlRow.addView(urlInput, urlLp); urlRow.addView(loadBtn, btnLp)
                   root.addView(urlRow)
 
-                  // SEARCH
                   val search = EditText(this).apply {
-                      setTextColor(TEXT)
-                      setHintTextColor(MUTED)
-                      hint = "Rechercher..."
-                      textSize = 16f
-                      setBackgroundColor(CARD)
-                      setPadding(28, 28, 28, 28)
-                  }
+                      setTextColor(TEXT); setHintTextColor(MUTED); hint = "Rechercher..."
+                      textSize = 16f; setBackgroundColor(CARD); setPadding(28, 28, 28, 28) }
                   val searchLp = LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT,
                       LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -262,57 +200,38 @@ jobs:
                   search.addTextChangedListener(object : TextWatcher {
                       override fun afterTextChanged(s: Editable?) { filter(s.toString()) }
                       override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
-                      override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
-                  })
+                      override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {} })
                   root.addView(search, searchLp)
 
-                  // LISTE M3U
                   val rv = RecyclerView(this).apply {
-                      layoutManager = LinearLayoutManager(this@MainActivity)
-                  }
+                      layoutManager = LinearLayoutManager(this@MainActivity) }
                   adapter = ChannelAdapter(channels) { ch ->
                       val intent = Intent(this@MainActivity, PlayerActivity::class.java)
-                      intent.putExtra("url", ch.url)
-                      intent.putExtra("title", ch.name)
-                      startActivity(intent)
-                  }
+                      intent.putExtra("url", ch.url); intent.putExtra("title", ch.name)
+                      startActivity(intent) }
                   rv.adapter = adapter
                   root.addView(rv, LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
 
-                  // CREDIT
-                  val credit = TextView(this).apply {
+                  root.addView(TextView(this).apply {
                       text = "Concu par Damien (Starly Koumba)"
-                      setTextColor(MUTED)
-                      textSize = 13f
-                      gravity = Gravity.CENTER
-                      setPadding(0, 16, 0, 16)
-                  }
-                  root.addView(credit)
+                      setTextColor(MUTED); textSize = 13f; gravity = Gravity.CENTER
+                      setPadding(0, 16, 0, 16) })
 
-                  // BOTTOM NAV
                   val bottomNav = LinearLayout(this).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      setBackgroundColor(CARD)
-                      setPadding(0, 8, 0, 8)
-                  }
+                      orientation = LinearLayout.HORIZONTAL; setBackgroundColor(CARD)
+                      setPadding(0, 8, 0, 8) }
                   val tabs = listOf(
                       "TV" to { },
                       "Films" to { startActivity(Intent(this@MainActivity, FilmsActivity::class.java)) },
                       "Abo" to { startActivity(Intent(this@MainActivity, SubActivity::class.java)) },
-                      "Direct" to { startActivity(Intent(this@MainActivity, DirectActivity::class.java)) }
-                  )
+                      "Direct" to { startActivity(Intent(this@MainActivity, DirectActivity::class.java)) })
                   tabs.forEachIndexed { idx, (label, action) ->
-                      val btn = TextView(this).apply {
-                          text = label
-                          setTextColor(if (idx == 0) ACCENT else MUTED)
-                          textSize = 14f
-                          gravity = Gravity.CENTER
-                          setPadding(0, 20, 0, 20)
-                          setOnClickListener { action() }
-                      }
-                      bottomNav.addView(btn, LinearLayout.LayoutParams(
-                          0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+                      bottomNav.addView(TextView(this).apply {
+                          text = label; setTextColor(if (idx == 0) ACCENT else MUTED)
+                          textSize = 14f; gravity = Gravity.CENTER
+                          setPadding(0, 20, 0, 20); setOnClickListener { action() }
+                      }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
                   }
                   root.addView(bottomNav)
 
@@ -325,36 +244,26 @@ jobs:
                       Toast.makeText(this@MainActivity, "Chargement...", Toast.LENGTH_SHORT).show()
                       try {
                           val ch = withContext(Dispatchers.IO) { fetchM3U(url) }
-                          allChannels = ch
-                          filter("")
+                          allChannels = ch; filter("")
                           Toast.makeText(this@MainActivity, "${ch.size} chaines", Toast.LENGTH_SHORT).show()
                       } catch (e: Exception) {
-                          Toast.makeText(this@MainActivity, "Erreur: ${e.message}", Toast.LENGTH_LONG).show()
-                      }
-                  }
-              }
+                          Toast.makeText(this@MainActivity, "Erreur: ${e.message}", Toast.LENGTH_LONG).show() } } }
 
               private fun filter(query: String) {
                   channels.clear()
-                  channels.addAll(
-                      if (query.isEmpty()) allChannels
-                      else allChannels.filter {
-                          it.name.contains(query, true) || it.group.contains(query, true)
-                      })
-                  adapter?.notifyDataSetChanged()
-              }
+                  channels.addAll(if (query.isEmpty()) allChannels
+                  else allChannels.filter {
+                      it.name.contains(query, true) || it.group.contains(query, true) })
+                  adapter?.notifyDataSetChanged() }
 
               private fun fetchM3U(url: String): List<Channel> {
                   val client = OkHttpClient.Builder()
                       .connectTimeout(30, TimeUnit.SECONDS)
-                      .readTimeout(30, TimeUnit.SECONDS)
-                      .build()
+                      .readTimeout(30, TimeUnit.SECONDS).build()
                   val req = Request.Builder().url(url).build()
                   val body = client.newCall(req).execute().body?.string() ?: return emptyList()
                   val list = mutableListOf<Channel>()
-                  var name: String? = null
-                  var logo = ""
-                  var group = "General"
+                  var name: String? = null; var logo = ""; var group = "General"
                   body.lines().forEach { line ->
                       val l = line.trim()
                       if (l.startsWith("#EXTINF:")) {
@@ -363,17 +272,10 @@ jobs:
                           group = Regex("group-title=\"([^\"]*)\"").find(info)?.groupValues?.get(1) ?: "General"
                           name = info.split(",").lastOrNull()?.trim()
                       } else if (l.isNotEmpty() && !l.startsWith("#") && name != null) {
-                          list.add(Channel(name!!, logo, group, l))
-                          name = null
-                      }
-                  }
-                  return list
-              }
+                          list.add(Channel(name!!, logo, group, l)); name = null } }
+                  return list }
 
-              override fun onDestroy() {
-                  super.onDestroy()
-                  scope.cancel()
-              }
+              override fun onDestroy() { super.onDestroy(); scope.cancel() }
           }
 
           class ChannelAdapter(
@@ -381,45 +283,32 @@ jobs:
               private val onClick: (Channel) -> Unit
           ) : RecyclerView.Adapter<ChannelAdapter.VH>() {
               class VH(v: View) : RecyclerView.ViewHolder(v)
-
               override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
                   val ctx = parent.context
                   val row = LinearLayout(ctx).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      setPadding(32, 28, 32, 28)
+                      orientation = LinearLayout.HORIZONTAL; setPadding(32, 28, 32, 28)
                       layoutParams = RecyclerView.LayoutParams(
                           RecyclerView.LayoutParams.MATCH_PARENT,
                           RecyclerView.LayoutParams.WRAP_CONTENT)
                       isClickable = true
-                      setBackgroundColor(Color.parseColor("#0B0F1A"))
-                  }
+                      setBackgroundColor(Color.parseColor("#0B0F1A")) }
                   val logo = ImageView(ctx)
                   val name = TextView(ctx).apply {
-                      setTextColor(Color.WHITE)
-                      textSize = 18f
-                      setPadding(28, 0, 0, 0)
+                      setTextColor(Color.WHITE); textSize = 18f; setPadding(28, 0, 0, 0)
                       layoutParams = LinearLayout.LayoutParams(0,
-                          LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                  }
+                          LinearLayout.LayoutParams.WRAP_CONTENT, 1f) }
                   row.addView(logo, LinearLayout.LayoutParams(110, 110))
                   row.addView(name)
-                  return VH(row)
-              }
-
+                  return VH(row) }
               override fun onBindViewHolder(holder: VH, position: Int) {
                   val ch = items[position]
                   val row = holder.itemView as LinearLayout
                   val logo = row.getChildAt(0) as ImageView
                   val name = row.getChildAt(1) as TextView
                   name.text = ch.name
-                  if (ch.logo.isNotEmpty()) {
-                      Glide.with(logo).load(ch.logo).into(logo)
-                  } else {
-                      logo.setImageResource(android.R.drawable.ic_menu_view)
-                  }
-                  row.setOnClickListener { onClick(ch) }
-              }
-
+                  if (ch.logo.isNotEmpty()) Glide.with(logo).load(ch.logo).into(logo)
+                  else logo.setImageResource(android.R.drawable.ic_menu_view)
+                  row.setOnClickListener { onClick(ch) } }
               override fun getItemCount() = items.size
           }
           KOTLIN_END
@@ -432,7 +321,6 @@ jobs:
           import android.content.Intent
           import android.graphics.Color
           import android.os.Bundle
-          import android.view.Gravity
           import android.view.View
           import android.widget.*
           import androidx.appcompat.app.AppCompatActivity
@@ -440,63 +328,47 @@ jobs:
           import androidx.recyclerview.widget.RecyclerView
           import com.bumptech.glide.Glide
 
-          data class Film(val title: String, val desc: String, val poster: String, val url: String, val genre: String, val year: Int)
+          data class Film(val title: String, val poster: String, val url: String, val genre: String, val year: Int)
 
           class FilmsActivity : AppCompatActivity() {
               private val BG = Color.parseColor("#0B0F1A")
-              private val CARD = Color.parseColor("#151B2B")
               private val ACCENT = Color.parseColor("#E50914")
-              private val GOLD = Color.parseColor("#FBBF24")
               private val TEXT = Color.WHITE
-              private val MUTED = Color.parseColor("#8B96B8")
 
               private val films = listOf(
-                  Film("Big Buck Bunny", "Un gros lapin gentil se venge.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "Animation", 2008),
-                  Film("Sintel", "Une jeune femme et son dragonneau.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", "Animation", 2010),
-                  Film("Elephants Dream", "Surrealiste et poetique.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", "Animation", 2006),
-                  Film("Tears of Steel", "Science-fiction neerlandaise.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", "Science-Fiction", 2012),
-                  Film("For Bigger Blazes", "Demo HD.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", "Action", 2015),
-                  Film("For Bigger Escapes", "Demo HD.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", "Action", 2015),
-                  Film("For Bigger Fun", "Demo HD.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", "Comedie", 2015),
-                  Film("For Bigger Joyrides", "Demo HD.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", "Action", 2015),
-                  Film("For Bigger Meltdowns", "Demo HD.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", "Action", 2015),
-                  Film("Subaru Outback", "Essai auto.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4", "Documentaire", 2015),
-                  Film("Volkswagen GTI", "Essai auto.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/VolkswagenGTIReview.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4", "Documentaire", 2015),
-                  Film("Bullrun Rally", "Course automobile.", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/WeAreGoingOnBullrun.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", "Documentaire", 2015)
+                  Film("Big Buck Bunny", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "Animation", 2008),
+                  Film("Sintel", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/Sintel.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4", "Animation", 2010),
+                  Film("Elephants Dream", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4", "Animation", 2006),
+                  Film("Tears of Steel", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/TearsOfSteel.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", "Science-Fiction", 2012),
+                  Film("For Bigger Blazes", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerBlazes.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4", "Action", 2015),
+                  Film("For Bigger Escapes", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerEscapes.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", "Action", 2015),
+                  Film("For Bigger Fun", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerFun.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4", "Comedie", 2015),
+                  Film("For Bigger Joyrides", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerJoyrides.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", "Action", 2015),
+                  Film("For Bigger Meltdowns", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ForBiggerMeltdowns.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4", "Action", 2015),
+                  Film("Subaru Outback", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/SubaruOutbackOnStreetAndDirt.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4", "Documentaire", 2015),
+                  Film("Volkswagen GTI", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/VolkswagenGTIReview.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4", "Documentaire", 2015),
+                  Film("Bullrun Rally", "https://storage.googleapis.com/gtv-videos-bucket/sample/images/WeAreGoingOnBullrun.jpg", "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4", "Documentaire", 2015)
               )
 
               override fun onCreate(savedInstanceState: Bundle?) {
                   super.onCreate(savedInstanceState)
                   window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                   window.statusBarColor = BG
-
                   val root = LinearLayout(this).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setBackgroundColor(BG)
-                  }
-
-                  val header = TextView(this).apply {
-                      text = "Films"
-                      setTextColor(TEXT)
-                      textSize = 26f
+                      orientation = LinearLayout.VERTICAL; setBackgroundColor(BG) }
+                  root.addView(TextView(this).apply {
+                      text = "Films"; setTextColor(TEXT); textSize = 26f
                       setTypeface(null, android.graphics.Typeface.BOLD)
-                      setPadding(32, 60, 32, 24)
-                  }
-                  root.addView(header)
-
+                      setPadding(32, 60, 32, 24) })
                   val rv = RecyclerView(this)
                   rv.layoutManager = LinearLayoutManager(this)
                   rv.adapter = FilmAdapter(films) { f ->
                       val i = Intent(this, PlayerActivity::class.java)
-                      i.putExtra("url", f.url)
-                      i.putExtra("title", f.title)
-                      startActivity(i)
-                  }
+                      i.putExtra("url", f.url); i.putExtra("title", f.title)
+                      startActivity(i) }
                   root.addView(rv, LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-
-                  setContentView(root)
-              }
+                  setContentView(root) }
           }
 
           class FilmAdapter(
@@ -504,39 +376,26 @@ jobs:
               private val onClick: (Film) -> Unit
           ) : RecyclerView.Adapter<FilmAdapter.VH>() {
               class VH(v: View) : RecyclerView.ViewHolder(v)
-
               override fun onCreateViewHolder(parent: android.view.ViewGroup, viewType: Int): VH {
                   val ctx = parent.context
                   val row = LinearLayout(ctx).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      setPadding(32, 24, 32, 24)
+                      orientation = LinearLayout.HORIZONTAL; setPadding(32, 24, 32, 24)
                       layoutParams = RecyclerView.LayoutParams(
                           RecyclerView.LayoutParams.MATCH_PARENT,
                           RecyclerView.LayoutParams.WRAP_CONTENT)
-                      setBackgroundColor(Color.parseColor("#0B0F1A"))
-                  }
+                      setBackgroundColor(Color.parseColor("#0B0F1A")) }
                   val poster = ImageView(ctx)
                   val col = LinearLayout(ctx).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setPadding(28, 0, 0, 0)
-                  }
-                  val title = TextView(ctx).apply {
-                      setTextColor(Color.WHITE)
-                      textSize = 18f
-                      setTypeface(null, android.graphics.Typeface.BOLD)
-                  }
-                  val genre = TextView(ctx).apply {
-                      setTextColor(Color.parseColor("#FBBF24"))
-                      textSize = 14f
-                      setPadding(0, 8, 0, 0)
-                  }
-                  col.addView(title)
-                  col.addView(genre)
+                      orientation = LinearLayout.VERTICAL; setPadding(28, 0, 0, 0) }
+                  col.addView(TextView(ctx).apply {
+                      setTextColor(Color.WHITE); textSize = 18f
+                      setTypeface(null, android.graphics.Typeface.BOLD) })
+                  col.addView(TextView(ctx).apply {
+                      setTextColor(Color.parseColor("#FBBF24")); textSize = 14f
+                      setPadding(0, 8, 0, 0) })
                   row.addView(poster, LinearLayout.LayoutParams(140, 200))
                   row.addView(col, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-                  return VH(row)
-              }
-
+                  return VH(row) }
               override fun onBindViewHolder(holder: VH, position: Int) {
                   val f = items[position]
                   val row = holder.itemView as LinearLayout
@@ -545,9 +404,7 @@ jobs:
                   (col.getChildAt(0) as TextView).text = f.title
                   (col.getChildAt(1) as TextView).text = "${f.year} - ${f.genre}"
                   Glide.with(poster).load(f.poster).into(poster)
-                  row.setOnClickListener { onClick(f) }
-              }
-
+                  row.setOnClickListener { onClick(f) } }
               override fun getItemCount() = items.size
           }
           KOTLIN_END
@@ -559,7 +416,6 @@ jobs:
 
           import android.content.Intent
           import android.graphics.Color
-          import android.graphics.drawable.GradientDrawable
           import android.net.Uri
           import android.os.Bundle
           import android.view.Gravity
@@ -594,105 +450,54 @@ jobs:
                   super.onCreate(savedInstanceState)
                   window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                   window.statusBarColor = BG
-
                   val root = LinearLayout(this).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setBackgroundColor(BG)
-                  }
-
-                  val header = TextView(this).apply {
-                      text = "Abonnements"
-                      setTextColor(TEXT)
-                      textSize = 26f
+                      orientation = LinearLayout.VERTICAL; setBackgroundColor(BG) }
+                  root.addView(TextView(this).apply {
+                      text = "Abonnements"; setTextColor(TEXT); textSize = 26f
                       setTypeface(null, android.graphics.Typeface.BOLD)
-                      setPadding(32, 60, 32, 24)
-                  }
-                  root.addView(header)
-
+                      setPadding(32, 60, 32, 24) })
                   val scroll = ScrollView(this)
                   val list = LinearLayout(this).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setPadding(24, 8, 24, 24)
-                  }
-
-                  val freeLabel = TextView(this).apply {
-                      text = "GRATUIT"
-                      setTextColor(GREEN)
-                      textSize = 18f
+                      orientation = LinearLayout.VERTICAL; setPadding(24, 8, 24, 24) }
+                  list.addView(TextView(this).apply {
+                      text = "GRATUIT"; setTextColor(GREEN); textSize = 18f
                       setTypeface(null, android.graphics.Typeface.BOLD)
-                      setPadding(0, 16, 0, 16)
-                  }
-                  list.addView(freeLabel)
-
-                  subs.filter { it.isFree }.forEach { s -> list.addView(subCard(s)) }
-
-                  val paidLabel = TextView(this).apply {
-                      text = "PAYANT"
-                      setTextColor(GOLD)
-                      textSize = 18f
+                      setPadding(0, 16, 0, 16) })
+                  subs.filter { it.isFree }.forEach { list.addView(subCard(it)) }
+                  list.addView(TextView(this).apply {
+                      text = "PAYANT"; setTextColor(GOLD); textSize = 18f
                       setTypeface(null, android.graphics.Typeface.BOLD)
-                      setPadding(0, 32, 0, 16)
-                  }
-                  list.addView(paidLabel)
-
-                  subs.filter { !it.isFree }.forEach { s -> list.addView(subCard(s)) }
-
+                      setPadding(0, 32, 0, 16) })
+                  subs.filter { !it.isFree }.forEach { list.addView(subCard(it)) }
                   scroll.addView(list)
                   root.addView(scroll, LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-
-                  setContentView(root)
-              }
+                  setContentView(root) }
 
               private fun subCard(s: Sub): LinearLayout {
                   val card = LinearLayout(this).apply {
                       orientation = LinearLayout.VERTICAL
-                      setPadding(32, 32, 32, 32)
-                      setBackgroundColor(CARD)
-                  }
-                  val lp = LinearLayout.LayoutParams(
+                      setPadding(32, 32, 32, 32); setBackgroundColor(CARD) }
+                  card.layoutParams = LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT,
-                      LinearLayout.LayoutParams.WRAP_CONTENT)
-                  lp.setMargins(0, 12, 0, 12)
-                  card.layoutParams = lp
-
+                      LinearLayout.LayoutParams.WRAP_CONTENT).apply { setMargins(0, 12, 0, 12) }
                   val topRow = LinearLayout(this).apply {
-                      orientation = LinearLayout.HORIZONTAL
-                      gravity = Gravity.CENTER_VERTICAL
-                  }
-                  val name = TextView(this).apply {
-                      text = s.name
-                      setTextColor(TEXT)
-                      textSize = 18f
-                      setTypeface(null, android.graphics.Typeface.BOLD)
-                  }
-                  topRow.addView(name, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-                  val badge = TextView(this).apply {
-                      text = s.badge
-                      setTextColor(Color.WHITE)
-                      textSize = 12f
+                      orientation = LinearLayout.HORIZONTAL; gravity = Gravity.CENTER_VERTICAL }
+                  topRow.addView(TextView(this).apply {
+                      text = s.name; setTextColor(TEXT); textSize = 18f
+                      setTypeface(null, android.graphics.Typeface.BOLD) },
+                      LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+                  topRow.addView(TextView(this).apply {
+                      text = s.badge; setTextColor(Color.WHITE); textSize = 12f
                       setPadding(20, 10, 20, 10)
-                      setBackgroundColor(if (s.isFree) GREEN else GOLD)
-                  }
-                  topRow.addView(badge)
+                      setBackgroundColor(if (s.isFree) GREEN else GOLD) })
                   card.addView(topRow)
-
-                  val desc = TextView(this).apply {
-                      text = s.desc
-                      setTextColor(MUTED)
-                      textSize = 14f
-                      setPadding(0, 14, 0, 0)
-                  }
-                  card.addView(desc)
-
+                  card.addView(TextView(this).apply {
+                      text = s.desc; setTextColor(MUTED); textSize = 14f
+                      setPadding(0, 14, 0, 0) })
                   card.setOnClickListener {
-                      try {
-                          startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(s.url)))
-                      } catch (e: Exception) { }
-                  }
-
-                  return card
-              }
+                      try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(s.url))) } catch (e: Exception) { } }
+                  return card }
           }
           KOTLIN_END
 
@@ -719,71 +524,41 @@ jobs:
                   super.onCreate(savedInstanceState)
                   window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                   window.statusBarColor = BG
-
                   val root = LinearLayout(this).apply {
-                      orientation = LinearLayout.VERTICAL
-                      setBackgroundColor(BG)
-                      gravity = Gravity.CENTER
-                      setPadding(48, 48, 48, 48)
-                  }
-
-                  val title = TextView(this).apply {
-                      text = "Lien direct"
-                      setTextColor(TEXT)
-                      textSize = 26f
-                      setTypeface(null, android.graphics.Typeface.BOLD)
-                      gravity = Gravity.CENTER
-                  }
-                  root.addView(title)
-
-                  val info = TextView(this).apply {
+                      orientation = LinearLayout.VERTICAL; setBackgroundColor(BG)
+                      gravity = Gravity.CENTER; setPadding(48, 48, 48, 48) }
+                  root.addView(TextView(this).apply {
+                      text = "Lien direct"; setTextColor(TEXT); textSize = 26f
+                      setTypeface(null, android.graphics.Typeface.BOLD); gravity = Gravity.CENTER })
+                  root.addView(TextView(this).apply {
                       text = "Colle ton lien m3u8, rtsp, rtmp, mp4..."
-                      setTextColor(MUTED)
-                      textSize = 15f
-                      gravity = Gravity.CENTER
-                      setPadding(0, 20, 0, 40)
-                  }
-                  root.addView(info)
-
+                      setTextColor(MUTED); textSize = 15f; gravity = Gravity.CENTER
+                      setPadding(0, 20, 0, 40) })
                   val input = EditText(this).apply {
-                      setTextColor(TEXT)
-                      setHintTextColor(MUTED)
+                      setTextColor(TEXT); setHintTextColor(MUTED)
                       hint = "https://exemple.com/stream.m3u8"
-                      textSize = 15f
-                      setBackgroundColor(CARD)
-                      setPadding(28, 28, 28, 28)
-                  }
+                      textSize = 15f; setBackgroundColor(CARD); setPadding(28, 28, 28, 28) }
                   root.addView(input, LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT,
                       LinearLayout.LayoutParams.WRAP_CONTENT))
-
                   val btn = TextView(this).apply {
-                      text = "Lire le lien"
-                      setTextColor(TEXT)
-                      textSize = 16f
-                      gravity = Gravity.CENTER
-                      setBackgroundColor(ACCENT)
+                      text = "Lire le lien"; setTextColor(TEXT); textSize = 16f
+                      gravity = Gravity.CENTER; setBackgroundColor(ACCENT)
                       setPadding(40, 32, 40, 32)
                       setOnClickListener {
                           val url = input.text.toString().trim()
                           if (url.isEmpty()) {
                               Toast.makeText(this@DirectActivity, "Entre une URL", Toast.LENGTH_SHORT).show()
-                              return@setOnClickListener
-                          }
+                              return@setOnClickListener }
                           val i = Intent(this@DirectActivity, PlayerActivity::class.java)
-                          i.putExtra("url", url)
-                          i.putExtra("title", "Flux direct")
-                          startActivity(i)
-                      }
-                  }
+                          i.putExtra("url", url); i.putExtra("title", "Flux direct")
+                          startActivity(i) } }
                   val blp = LinearLayout.LayoutParams(
                       LinearLayout.LayoutParams.MATCH_PARENT,
                       LinearLayout.LayoutParams.WRAP_CONTENT)
                   blp.setMargins(0, 40, 0, 0)
                   root.addView(btn, blp)
-
-                  setContentView(root)
-              }
+                  setContentView(root) }
           }
           KOTLIN_END
 
@@ -797,21 +572,24 @@ jobs:
           import android.net.Uri
           import android.os.Bundle
           import android.view.Gravity
-          import android.view.View
           import android.view.WindowManager
           import android.widget.FrameLayout
-          import android.widget.LinearLayout
           import android.widget.TextView
           import androidx.appcompat.app.AppCompatActivity
           import androidx.media3.common.MediaItem
+          import androidx.media3.common.PlaybackException
+          import androidx.media3.common.Player
           import androidx.media3.datasource.DefaultHttpDataSource
+          import androidx.media3.exoplayer.DefaultLoadControl
           import androidx.media3.exoplayer.ExoPlayer
+          import androidx.media3.exoplayer.hls.HlsMediaSource
           import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
           import androidx.media3.ui.PlayerView
 
           class PlayerActivity : AppCompatActivity() {
               private var player: ExoPlayer? = null
               private var currentUrl: String = ""
+              private var currentTitle: String = ""
 
               override fun onCreate(savedInstanceState: Bundle?) {
                   super.onCreate(savedInstanceState)
@@ -821,12 +599,15 @@ jobs:
                   val url = intent.getStringExtra("url") ?: return
                   val title = intent.getStringExtra("title") ?: "Lecture"
                   currentUrl = url
+                  currentTitle = title
 
                   val root = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
 
                   val playerView = PlayerView(this).apply {
                       layoutParams = FrameLayout.LayoutParams(-1, -1)
                       setUseController(true)
+                      setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+                      setKeepContentOnPlayerReset(true)
                   }
                   root.addView(playerView)
 
@@ -834,11 +615,10 @@ jobs:
                       text = title
                       setTextColor(Color.WHITE)
                       textSize = 18f
-                      setPadding(40, 80, 40, 40)
+                      setPadding(40, 80, 200, 40)
                   }
                   root.addView(titleView)
 
-                  // BOUTON VLC
                   val vlcBtn = TextView(this).apply {
                       text = "VLC"
                       setTextColor(Color.WHITE)
@@ -852,10 +632,8 @@ jobs:
                               intent.setPackage("org.videolan.vlc")
                               startActivity(intent)
                           } catch (e: Exception) {
-                              try {
-                                  startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl)))
-                              } catch (e2: Exception) { }
-                          }
+                              try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(currentUrl)))
+                              } catch (e2: Exception) { } }
                       }
                   }
                   val vlcLp = FrameLayout.LayoutParams(
@@ -867,14 +645,44 @@ jobs:
 
                   setContentView(root)
 
+                  // Buffer généreux pour IPTV
+                  val loadControl = DefaultLoadControl.Builder()
+                      .setBufferDurationsMs(
+                          30000,
+                          120000,
+                          5000,
+                          10000)
+                      .setPrioritizeTimeOverSizeThresholds(true)
+                      .build()
+
                   val httpFactory = DefaultHttpDataSource.Factory()
                       .setUserAgent("VLC/3.0.20 LibVLC/3.0.20")
+                      .setConnectTimeoutMs(30000)
+                      .setReadTimeoutMs(30000)
+                      .setAllowCrossProtocolRedirects(true)
 
                   player = ExoPlayer.Builder(this)
+                      .setLoadControl(loadControl)
                       .setMediaSourceFactory(DefaultMediaSourceFactory(httpFactory))
+                      .setHandleAudioBecomingNoisy(true)
+                      .setWakeMode(androidx.media3.common.C.WAKE_MODE_NETWORK)
                       .build()
 
                   playerView.player = player
+
+                  // Retry automatique en cas d'erreur
+                  player!!.addListener(object : Player.Listener {
+                      override fun onPlayerError(error: PlaybackException) {
+                          super.onPlayerError(error)
+                          // Relance après 2 secondes
+                          player?.postDelayed({
+                              try {
+                                  player?.prepare()
+                                  player?.play()
+                              } catch (e: Exception) { }
+                          }, 2000)
+                      }
+                  })
 
                   val item = MediaItem.fromUri(url)
                   player!!.setMediaItem(item)
@@ -885,6 +693,11 @@ jobs:
               override fun onPause() {
                   super.onPause()
                   player?.pause()
+              }
+
+              override fun onResume() {
+                  super.onResume()
+                  player?.play()
               }
 
               override fun onDestroy() {
