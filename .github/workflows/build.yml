@@ -35,7 +35,7 @@ jobs:
 
       - name: app/build.gradle
         run: |
-          printf 'plugins {\n    id "com.android.application"\n    id "kotlin-android"\n}\nandroid {\n    namespace "com.damientv241.app"\n    compileSdk 34\n    defaultConfig {\n        applicationId "com.damientv241.app"\n        minSdk 21\n        targetSdk 34\n        versionCode 2\n        versionName "1.1"\n    }\n    buildTypes {\n        release {\n            minifyEnabled false\n            signingConfig signingConfigs.debug\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }\n    kotlinOptions { jvmTarget = "17" }\n}\ndependencies {\n    implementation "androidx.core:core-ktx:1.12.0"\n    implementation "androidx.appcompat:appcompat:1.6.1"\n    implementation "androidx.recyclerview:recyclerview:1.3.2"\n    implementation "androidx.media3:media3-exoplayer:1.2.1"\n    implementation "androidx.media3:media3-exoplayer-hls:1.2.1"\n    implementation "androidx.media3:media3-exoplayer-dash:1.2.1"\n    implementation "androidx.media3:media3-ui:1.2.1"\n    implementation "com.squareup.okhttp3:okhttp:4.12.0"\n    implementation "com.github.bumptech.glide:glide:4.16.0"\n    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"\n}\n' > app/build.gradle
+          printf 'plugins {\n    id "com.android.application"\n    id "kotlin-android"\n}\nandroid {\n    namespace "com.damientv241.app"\n    compileSdk 34\n    defaultConfig {\n        applicationId "com.damientv241.app"\n        minSdk 21\n        targetSdk 34\n        versionCode 2\n        versionName "1.1"\n    }\n    buildTypes {\n        release {\n            minifyEnabled false\n            signingConfig signingConfigs.debug\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_17\n        targetCompatibility JavaVersion.VERSION_17\n    }\n    kotlinOptions { jvmTarget = "17" }\n}\ndependencies {\n    implementation "androidx.core:core-ktx:1.12.0"\n    implementation "androidx.appcompat:appcompat:1.6.1"\n    implementation "androidx.recyclerview:recyclerview:1.3.2"\n    implementation "androidx.media3:media3-exoplayer:1.2.1"\n    implementation "androidx.media3:media3-exoplayer-hls:1.2.1"\n    implementation "androidx.media3:media3-ui:1.2.1"\n    implementation "com.squareup.okhttp3:okhttp:4.12.0"\n    implementation "com.github.bumptech.glide:glide:4.16.0"\n    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"\n}\n' > app/build.gradle
 
       - name: AndroidManifest
         run: |
@@ -571,6 +571,8 @@ jobs:
           import android.graphics.Color
           import android.net.Uri
           import android.os.Bundle
+          import android.os.Handler
+          import android.os.Looper
           import android.view.Gravity
           import android.view.WindowManager
           import android.widget.FrameLayout
@@ -582,14 +584,12 @@ jobs:
           import androidx.media3.datasource.DefaultHttpDataSource
           import androidx.media3.exoplayer.DefaultLoadControl
           import androidx.media3.exoplayer.ExoPlayer
-          import androidx.media3.exoplayer.hls.HlsMediaSource
           import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
           import androidx.media3.ui.PlayerView
 
           class PlayerActivity : AppCompatActivity() {
               private var player: ExoPlayer? = null
               private var currentUrl: String = ""
-              private var currentTitle: String = ""
 
               override fun onCreate(savedInstanceState: Bundle?) {
                   super.onCreate(savedInstanceState)
@@ -599,15 +599,12 @@ jobs:
                   val url = intent.getStringExtra("url") ?: return
                   val title = intent.getStringExtra("title") ?: "Lecture"
                   currentUrl = url
-                  currentTitle = title
 
                   val root = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
 
                   val playerView = PlayerView(this).apply {
                       layoutParams = FrameLayout.LayoutParams(-1, -1)
                       setUseController(true)
-                      setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
-                      setKeepContentOnPlayerReset(true)
                   }
                   root.addView(playerView)
 
@@ -645,13 +642,8 @@ jobs:
 
                   setContentView(root)
 
-                  // Buffer généreux pour IPTV
                   val loadControl = DefaultLoadControl.Builder()
-                      .setBufferDurationsMs(
-                          30000,
-                          120000,
-                          5000,
-                          10000)
+                      .setBufferDurationsMs(30000, 120000, 5000, 10000)
                       .setPrioritizeTimeOverSizeThresholds(true)
                       .build()
 
@@ -665,17 +657,15 @@ jobs:
                       .setLoadControl(loadControl)
                       .setMediaSourceFactory(DefaultMediaSourceFactory(httpFactory))
                       .setHandleAudioBecomingNoisy(true)
-                      .setWakeMode(androidx.media3.common.C.WAKE_MODE_NETWORK)
                       .build()
 
                   playerView.player = player
 
-                  // Retry automatique en cas d'erreur
+                  val handler = Handler(Looper.getMainLooper())
                   player!!.addListener(object : Player.Listener {
                       override fun onPlayerError(error: PlaybackException) {
                           super.onPlayerError(error)
-                          // Relance après 2 secondes
-                          player?.postDelayed({
+                          handler.postDelayed({
                               try {
                                   player?.prepare()
                                   player?.play()
