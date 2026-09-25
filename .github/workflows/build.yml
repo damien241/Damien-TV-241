@@ -344,11 +344,10 @@ jobs:
           import android.widget.TextView
           import androidx.appcompat.app.AppCompatActivity
           import androidx.media3.common.MediaItem
+          import androidx.media3.datasource.DefaultHttpDataSource
           import androidx.media3.exoplayer.ExoPlayer
           import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
-          import androidx.media3.datasource.okhttp.OkHttpDataSource
           import androidx.media3.ui.PlayerView
-          import okhttp3.OkHttpClient
 
           class PlayerActivity : AppCompatActivity() {
               private var player: ExoPlayer? = null
@@ -379,8 +378,7 @@ jobs:
 
                   setContentView(root)
 
-                  val httpClient = OkHttpClient.Builder().build()
-                  val httpFactory = OkHttpDataSource.Factory(httpClient)
+                  val httpFactory = DefaultHttpDataSource.Factory()
                       .setUserAgent("VLC/3.0.20 LibVLC/3.0.20")
 
                   player = ExoPlayer.Builder(this)
